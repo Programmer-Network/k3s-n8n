@@ -8,7 +8,7 @@ spec:
   source:
     repoURL: https://github.com/Programmer-Network/k3s-n8n
     targetRevision: HEAD
-    path: k3s-n8n/n8n-app
+    path: n8n-app
   destination:
     server: https://kubernetes.default.svc
     namespace: n8n
