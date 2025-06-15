@@ -1,0 +1,23 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: n8n-pg-cluster
+  namespace: n8n
+spec:
+  instances: 1
+  imageName: ghcr.io/cloudnative-pg/postgresql:15
+  storage:
+    size: 10Gi
+    storageClass: longhorn
+  superuserSecret:
+    name: n8n-pg-secret
+  bootstrap:
+    initdb:
+      secret:
+        name: n8n-pg-secret
+      postInitSQL:
+        - CREATE DATABASE n8n;
+        - CREATE USER n8n WITH PASSWORD '{{ .Password }}';
+        - GRANT ALL PRIVILEGES ON DATABASE n8n TO n8n;
+  monitoring:
+    enablePodMonitor: true

@@ -1,0 +1,12 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: n8n-local-tls
+  namespace: n8n
+spec:
+  secretName: n8n-local-tls
+  issuerRef:
+    name: letsencrypt-dns01
+    kind: ClusterIssuer
+  dnsNames:
+    - n8n.programmer.network

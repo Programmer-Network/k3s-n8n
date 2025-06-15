@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: n8n
+  namespace: n8n
+  labels:
+    app: n8n
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: n8n
+  template:
+    metadata:
+      labels:
+        app: n8n
+    spec:
+      containers:
+        - name: n8n
+          image: n8nio/n8n:latest
+          ports:
+            - containerPort: 5678
+          envFrom:
+            - configMapRef:
+                name: n8n-config
+            - secretRef:
+                name: n8n-secret
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 5678
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 5678
+          resources:
+            limits:
+              cpu: "1.0"
+              memory: "2048Mi"
+            requests:
+              cpu: "0.5"
+              memory: "512Mi"
+          env:
+            - name: N8N_HOST
+              value: n8n.programmer.network
+            - name: WEBHOOK_TUNNEL_URL
+              value: http://n8n.programmer.network/

@@ -1,0 +1,9 @@
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: n8n-ratelimit
+  namespace: n8n
+spec:
+  rateLimit:
+    average: 20
+    burst: 30
