@@ -5,7 +5,7 @@ metadata:
   namespace: n8n
 spec:
   instances: 1
-  imageName: ghcr.io/cloudnative-pg/postgresql:15
+  imageName: ghcr.io/cloudnative-pg/postgresql:17
   storage:
     size: 10Gi
     storageClass: longhorn
@@ -13,27 +13,8 @@ spec:
     name: n8n-pg-secret
   bootstrap:
     initdb:
+      database: n8n
       secret:
         name: n8n-pg-secret
-      postInitSQL:
-        - |
-          DO
-          $do$
-          BEGIN
-            IF NOT EXISTS (SELECT FROM pg_database WHERE datname = 'n8n') THEN
-              CREATE DATABASE n8n;
-            END IF;
-          END
-          $do$;
-        - |
-          DO
-          $do$
-          BEGIN
-            IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname = 'n8n') THEN
-              CREATE USER n8n WITH PASSWORD '{{ .Password }}';
-            END IF;
-          END
-          $do$;
-        - GRANT ALL PRIVILEGES ON DATABASE n8n TO n8n;
   monitoring:
     enablePodMonitor: true
