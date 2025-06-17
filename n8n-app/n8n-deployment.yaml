@@ -65,8 +65,13 @@ spec:
               value: n8n.programmer.network
             - name: WEBHOOK_TUNNEL_URL
               value: http://n8n.programmer.network/
+            - name: DB_POSTGRESDB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: n8n-pg-cluster-app
+                  key: username
             - name: DB_POSTGRESDB_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: n8n-pg-secret
+                  name: n8n-pg-cluster-app
                   key: password
