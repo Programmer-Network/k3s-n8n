@@ -1,3 +1,4 @@
+# n8n deployment configuration
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -6,6 +7,7 @@ metadata:
   labels:
     app: n8n
 spec:
+  # Single replica as n8n is not designed for horizontal scaling
   replicas: 1
   selector:
     matchLabels:
@@ -15,9 +17,12 @@ spec:
       labels:
         app: n8n
     spec:
+      # Disable Kubernetes service environment variables to prevent conflicts
       enableServiceLinks: false
+      # Set filesystem permissions for the n8n user (uid 1000)
       securityContext:
         fsGroup: 1000
+      # Persistent storage for n8n data (workflows, credentials, etc.)
       volumes:
         - name: n8n-data
           persistentVolumeClaim:
@@ -27,14 +32,17 @@ spec:
           image: n8nio/n8n:1.98.1
           ports:
             - containerPort: 5678
+          # Mount the persistent volume for n8n data
           volumeMounts:
             - name: n8n-data
               mountPath: /home/node/.n8n
+          # Load configuration from ConfigMap and non-database secrets
           envFrom:
             - configMapRef:
                 name: n8n-config
             - secretRef:
                 name: n8n-secret
+          # Health checks with generous initial delay for database connectivity
           livenessProbe:
             httpGet:
               path: /healthz
@@ -53,6 +61,7 @@ spec:
               port: 5678
             failureThreshold: 30
             periodSeconds: 10
+          # Resource limits to prevent container from consuming too much memory
           resources:
             limits:
               cpu: "1.0"
@@ -60,11 +69,13 @@ spec:
             requests:
               cpu: "0.5"
               memory: "512Mi"
+          # Environment variables for n8n configuration
           env:
             - name: N8N_HOST
               value: n8n.programmer.network
             - name: WEBHOOK_TUNNEL_URL
               value: http://n8n.programmer.network/
+            # Database credentials from CloudNativePG-generated secret
             - name: DB_POSTGRESDB_USER
               valueFrom:
                 secretKeyRef:

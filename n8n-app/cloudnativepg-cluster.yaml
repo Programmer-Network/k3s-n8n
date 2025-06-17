@@ -1,19 +1,30 @@
+# PostgreSQL cluster configuration for n8n
+# This defines a single-instance PostgreSQL database with persistent storage
 apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
 metadata:
   name: n8n-pg-cluster
   namespace: n8n
 spec:
+  # Single instance deployment - suitable for development/testing
   instances: 1
   imageName: ghcr.io/cloudnative-pg/postgresql:15
+
+  # Persistent storage configuration using Longhorn
   storage:
     size: 10Gi
-    storageClass: longhorn
+    storageClass: longhorn # Uses Longhorn for reliable persistent storage
+
+  # Reference to superuser credentials
   superuserSecret:
     name: n8n-pg-secret
+
+  # Initial database setup
   bootstrap:
     initdb:
-      database: n8n
-      owner: n8n
+      database: n8n # Creates a database named 'n8n'
+      owner: n8n # Creates a user 'n8n' as the database owner
+
+  # Enable monitoring via Prometheus
   monitoring:
     enablePodMonitor: true

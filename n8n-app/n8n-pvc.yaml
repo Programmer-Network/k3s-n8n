@@ -1,11 +1,19 @@
+# Persistent Volume Claim for n8n data
+# This PVC stores all n8n data including:
+# - Workflows
+# - Credentials
+# - User settings
+# - Local authentication data
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: n8n-data
   namespace: n8n
 spec:
+  # ReadWriteOnce is sufficient as n8n runs as a single instance
   accessModes:
     - ReadWriteOnce
+  # Using Longhorn for reliable storage with potential for backups
   storageClassName: longhorn
   resources:
     requests:
