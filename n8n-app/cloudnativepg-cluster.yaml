@@ -14,7 +14,6 @@ spec:
   bootstrap:
     initdb:
       database: n8n
-      secret:
-        name: n8n-pg-secret
+      owner: n8n
   monitoring:
     enablePodMonitor: true
