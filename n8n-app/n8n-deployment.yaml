@@ -15,11 +15,18 @@ spec:
       labels:
         app: n8n
     spec:
+      volumes:
+        - name: n8n-data
+          persistentVolumeClaim:
+            claimName: n8n-data
       containers:
         - name: n8n
           image: n8nio/n8n:1.98.1
           ports:
             - containerPort: 5678
+          volumeMounts:
+            - name: n8n-data
+              mountPath: /home/node/.n8n
           envFrom:
             - configMapRef:
                 name: n8n-config
