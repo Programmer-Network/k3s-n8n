@@ -39,10 +39,20 @@ spec:
             httpGet:
               path: /healthz
               port: 5678
+            initialDelaySeconds: 30
+            timeoutSeconds: 5
           readinessProbe:
             httpGet:
               path: /healthz
               port: 5678
+            initialDelaySeconds: 30
+            timeoutSeconds: 5
+          startupProbe:
+            httpGet:
+              path: /healthz
+              port: 5678
+            failureThreshold: 30
+            periodSeconds: 10
           resources:
             limits:
               cpu: "1.0"
