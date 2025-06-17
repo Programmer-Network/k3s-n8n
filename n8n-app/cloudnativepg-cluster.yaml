@@ -6,7 +6,6 @@ metadata:
 spec:
   instances: 1
   imageName: ghcr.io/cloudnative-pg/postgresql:15
-  primaryUpdateStrategy: unsupervised
   storage:
     size: 10Gi
     storageClass: longhorn
@@ -14,9 +13,8 @@ spec:
     name: n8n-pg-secret
   bootstrap:
     initdb:
-      owner: n8n
-  postgresql:
-    pg_hba:
-      - host all all all md5
+      database: n8n
+      secret:
+        name: n8n-pg-secret
   monitoring:
     enablePodMonitor: true
