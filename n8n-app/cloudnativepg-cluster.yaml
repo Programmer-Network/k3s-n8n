@@ -15,5 +15,8 @@ spec:
   bootstrap:
     initdb:
       owner: n8n
+  postgresql:
+    pg_hba:
+      - host all all all md5
   monitoring:
     enablePodMonitor: true
