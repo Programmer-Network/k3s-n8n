@@ -29,7 +29,7 @@ spec:
             claimName: n8n-data
       containers:
         - name: n8n
-          image: n8nio/n8n:1.98.1
+          image: n8nio/n8n:1.98.2
           ports:
             - containerPort: 5678
           # Mount the persistent volume for n8n data
