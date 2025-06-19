@@ -22,6 +22,19 @@ spec:
       # Set filesystem permissions for the n8n user (uid 1000)
       securityContext:
         fsGroup: 1000
+      # Node affinity configuration to prefer specific workers
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: kubernetes.io/hostname
+                    operator: In
+                    values:
+                      - hp-minipc
+                      - lenovo-minipc
+                      - rp-4
       # Persistent storage for n8n data (workflows, credentials, etc.)
       volumes:
         - name: n8n-data
